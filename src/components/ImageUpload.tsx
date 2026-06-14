@@ -22,7 +22,6 @@ export default function ImageUpload({ label, image, onImage, accent = 'violet' }
     if (file?.type.startsWith('image/')) handleFile(file);
   }
 
-  const ring = accent === 'rose' ? 'ring-rose-300' : 'ring-violet-300';
   const border = accent === 'rose'
     ? 'border-rose-200 hover:border-rose-400 bg-rose-50'
     : 'border-violet-200 hover:border-violet-400 bg-violet-50';
