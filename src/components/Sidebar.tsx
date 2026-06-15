@@ -6,9 +6,11 @@ interface Props {
   onSelect: (id: string) => void;
   onNew: () => void;
   onDelete: (id: string) => void;
+  hasApiKey: boolean;
+  onOpenSettings: () => void;
 }
 
-export default function Sidebar({ questions, selectedId, onSelect, onNew, onDelete }: Props) {
+export default function Sidebar({ questions, selectedId, onSelect, onNew, onDelete, hasApiKey, onOpenSettings }: Props) {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-full shrink-0">
       <div className="p-4 border-b border-gray-200">
@@ -78,6 +80,20 @@ export default function Sidebar({ questions, selectedId, onSelect, onNew, onDele
             </div>
           );
         })}
+      </div>
+
+      {/* Settings footer */}
+      <div className="p-3 border-t border-gray-100">
+        <button
+          onClick={onOpenSettings}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-50 transition-colors"
+        >
+          <span>⚙️</span>
+          <span>API Key</span>
+          <span className={`ml-auto text-xs px-1.5 py-0.5 rounded-full ${hasApiKey ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
+            {hasApiKey ? 'set' : 'not set'}
+          </span>
+        </button>
       </div>
     </aside>
   );

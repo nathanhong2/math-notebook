@@ -5,9 +5,10 @@ import ImageUpload from './ImageUpload';
 interface Props {
   question: Question;
   onSave: (q: Question) => void;
+  apiKey: string;
 }
 
-export default function QuestionPage({ question, onSave }: Props) {
+export default function QuestionPage({ question, onSave, apiKey }: Props) {
   const [local, setLocal] = useState<Question>(question);
 
   useEffect(() => {
@@ -55,13 +56,19 @@ export default function QuestionPage({ question, onSave }: Props) {
         <ImageUpload
           label="Question"
           image={local.questionImage}
-          onImage={(img) => update({ questionImage: img })}
+          ocrText={local.questionText ?? null}
+          onImage={(img) => update({ questionImage: img, questionText: null })}
+          onOcrText={(text) => update({ questionText: text })}
+          apiKey={apiKey}
           accent="violet"
         />
         <ImageUpload
           label="My Wrong Answer"
           image={local.wrongAnswerImage}
-          onImage={(img) => update({ wrongAnswerImage: img })}
+          ocrText={local.wrongAnswerText ?? null}
+          onImage={(img) => update({ wrongAnswerImage: img, wrongAnswerText: null })}
+          onOcrText={(text) => update({ wrongAnswerText: text })}
+          apiKey={apiKey}
           accent="rose"
         />
       </div>

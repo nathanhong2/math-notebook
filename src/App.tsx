@@ -3,6 +3,9 @@ import type { Question } from './types';
 import { getAllQuestions, saveQuestion, deleteQuestion } from './db';
 import Sidebar from './components/Sidebar';
 import QuestionPage from './components/QuestionPage';
+import SettingsModal from './components/SettingsModal';
+
+const API_KEY_STORAGE = 'upstage_api_key';
 
 function newQuestion(): Question {
   return {
@@ -10,7 +13,9 @@ function newQuestion(): Question {
     title: '',
     subject: '',
     questionImage: null,
+    questionText: null,
     wrongAnswerImage: null,
+    wrongAnswerText: null,
     practices: [false, false, false, false, false],
     createdAt: Date.now(),
     updatedAt: Date.now(),
@@ -20,6 +25,8 @@ function newQuestion(): Question {
 export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '');
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     getAllQuestions().then((qs) => {
@@ -27,6 +34,12 @@ export default function App() {
       if (qs.length > 0) setSelectedId(qs[0].id);
     });
   }, []);
+
+  function handleSaveKey(key: string) {
+    setApiKey(key);
+    if (key) localStorage.setItem(API_KEY_STORAGE, key);
+    else localStorage.removeItem(API_KEY_STORAGE);
+  }
 
   async function handleNew() {
     const q = newQuestion();
@@ -60,10 +73,12 @@ export default function App() {
         onSelect={setSelectedId}
         onNew={handleNew}
         onDelete={handleDelete}
+        hasApiKey={!!apiKey}
+        onOpenSettings={() => setSettingsOpen(true)}
       />
       <main className="flex-1 flex flex-col overflow-hidden bg-gray-50">
         {selected ? (
-          <QuestionPage key={selected.id} question={selected} onSave={handleSave} />
+          <QuestionPage key={selected.id} question={selected} onSave={handleSave} apiKey={apiKey} />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
             <p className="text-6xl mb-4">📐</p>
@@ -80,6 +95,13 @@ export default function App() {
           </div>
         )}
       </main>
+      {settingsOpen && (
+        <SettingsModal
+          currentKey={apiKey}
+          onSave={handleSaveKey}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </>
   );
 }
