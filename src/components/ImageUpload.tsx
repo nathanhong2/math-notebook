@@ -22,7 +22,6 @@ export default function ImageUpload({ label, image, ocrText, onImage, onOcrText,
     reader.onload = async (e) => {
       const dataUrl = e.target?.result as string;
       onImage(dataUrl);
-      onOcrText(null);
       setError(null);
 
       if (!apiKey) return;
